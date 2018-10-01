@@ -9,6 +9,7 @@ from alien import YellowAlien
 from time import sleep
 from button import Button
 from alienlabel import AlienLabel
+from pygame.sprite import Group
 
 
 def present_game(ai_settings,screen):
@@ -330,20 +331,21 @@ def ship_hit_by_alien_ship(ai_settings,screen,stats,sb,ship,red_aliens,yellow_al
         stats.game_active = False
         pygame.mouse.set_visible(True)
 
+def add_aliens(red_aliens,yellow_aliens,green_aliens):
+    aliens = Group()
+    for alien in red_aliens.sprites():
+        aliens.add(alien)
+    for alien in yellow_aliens.sprites():
+        aliens.add(alien)
+    for alien in green_aliens.sprites():
+        aliens.add(alien)
+    return aliens
+
 def check_aliens_bottom(ai_settings,screen,stats,sb,ship,red_aliens,yellow_aliens,green_aliens,bullets,alien_bullets):
     """Check if any aliens have reached the bottom of the screen."""
+    aliens = add_aliens(red_aliens,yellow_aliens,green_aliens)
     screen_rect = screen.get_rect()
-    for alien in red_aliens.sprites():
-        if alien.rect.bottom >= screen_rect.bottom:
-            # Treat this the same as if the ship got hit.
-            ship_hit_by_alien_ship(ai_settings,screen,stats,sb,ship,red_aliens,yellow_aliens,green_aliens,bullets,alien_bullets)
-            break
-    for alien in yellow_aliens.sprites():
-        if alien.rect.bottom >= screen_rect.bottom:
-            # Treat this the same as if the ship got hit.
-            ship_hit_by_alien_ship(ai_settings,screen,stats,sb,ship,red_aliens,yellow_aliens,green_aliens,bullets,alien_bullets)
-            break
-    for alien in green_aliens.sprites():
+    for alien in aliens.sprites():
         if alien.rect.bottom >= screen_rect.bottom:
             # Treat this the same as if the ship got hit.
             ship_hit_by_alien_ship(ai_settings,screen,stats,sb,ship,red_aliens,yellow_aliens,green_aliens,bullets,alien_bullets)
