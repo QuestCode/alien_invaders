@@ -6,6 +6,7 @@ class Settings():
     def __init__(self):
         """Initialize the game's static settings."""
         # Screen Settings
+        self.game_title = 'Alien Invasion'
         self.screen_width = 800
         self.screen_height = 600
         self.bg_color = (0,0,0)
@@ -13,7 +14,7 @@ class Settings():
         self.text_color = (255,255,255)
 
         # Ship settings
-        self.ship_limit = 3
+        self.ship_limit = 5
 
         # Bullet settings
         self.bullet_width = 3
@@ -35,6 +36,7 @@ class Settings():
 
         self.lose_level = False
 
+        self.ship_image = 'images/png_images/ship.png'
         self.green_alien_image = 'images/hands_up_invader_green.png'
         self.yellow_alien_image = 'images/hands_down_invader_yellow.png'
         self.red_alien_image = 'images/king_invader_red.png'
@@ -67,5 +69,7 @@ class Settings():
         self.bullet_speed_factor *= self.speedup_scale
         self.alien_speed_factor *= self.speedup_scale
 
-        self.alien_points = int(self.alien_points * self.score_scale)
+        self.green_alien_points = int(self.green_alien_points * self.score_scale)
+        self.yellow_alien_points = int(self.yellow_alien_points * self.score_scale)
+        self.red_alien_points = int(self.red_alien_points * self.score_scale)
         # print(self.alien_points)

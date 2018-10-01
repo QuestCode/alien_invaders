@@ -14,7 +14,7 @@ from alienlabel import AlienLabel
 def present_game(ai_settings,screen):
     screen.fill(ai_settings.bg_color)
     font = ai_settings.winner_font
-    msg = font.render("Alien Invaders", True, ai_settings.text_color)
+    msg = font.render(ai_settings.game_title, True, ai_settings.text_color)
     msgRect = msg.get_rect()
     msgRect.centerx = int(ai_settings.screen_width/2)
     msgRect.top = int(ai_settings.screen_height/6)
@@ -152,8 +152,6 @@ def check_alien_bullet_ship_collision(ai_settings,screen,stats,sb,ship,aliens,bu
             # Update scoreboard.
             sb.prep_ships()
 
-            # Empty the list of aliens and bullets.
-            aliens.empty()
             bullets.empty()
             alien_bullets.empty()
 
@@ -167,7 +165,10 @@ def check_alien_bullet_ship_collision(ai_settings,screen,stats,sb,ship,aliens,bu
             pygame.mouse.set_visible(True)
 
         ai_settings.lose_level = True
-        reset_level(ai_settings,screen,stats,sb,ship,aliens)
+        if len(aliens) == 0:
+            # Empty the list of aliens and bullets.
+            aliens.empty()
+            reset_level(ai_settings,screen,stats,sb,ship,aliens)
 
 
 def fire_bullet(ai_settings,screen,ship,bullets):
