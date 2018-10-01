@@ -7,7 +7,36 @@ from alien import Alien
 from alien import RedAlien
 from alien import YellowAlien
 from time import sleep
+from button import Button
+from alienlabel import AlienLabel
 
+
+def present_game(ai_settings,screen):
+    screen.fill(ai_settings.bg_color)
+    font = ai_settings.winner_font
+    msg = font.render("Alien Invaders", True, ai_settings.text_color)
+    msgRect = msg.get_rect()
+    msgRect.centerx = int(ai_settings.screen_width/2)
+    msgRect.top = int(ai_settings.screen_height/6)
+    screen.blit(msg, msgRect)
+    pygame.display.update()
+    display_score_card(ai_settings,screen)
+    play_button = Button(ai_settings,screen,"Start the Game")
+    play_button.draw_button()
+
+def display_score_card(ai_settings,screen):
+    green_alien = AlienLabel(ai_settings.screen_width/3,ai_settings.screen_height/3)
+    green_alien.initialize_images(ai_settings,screen,ai_settings.green_alien_image,ai_settings.green_alien_points)
+
+
+    yellow_alien = AlienLabel(ai_settings.screen_width/3,ai_settings.screen_height/3 + 50)
+    yellow_alien.initialize_images(ai_settings,screen,ai_settings.yellow_alien_image,ai_settings.yellow_alien_points)
+
+    red_alien = AlienLabel(ai_settings.screen_width/3,ai_settings.screen_height/3 + 100)
+    red_alien.initialize_images(ai_settings,screen,ai_settings.red_alien_image,ai_settings.red_alien_points)
+    green_alien.update()
+    yellow_alien.update()
+    red_alien.update()
 
 def check_events(ai_settings,screen,stats,sb,play_button,ship,aliens,bullets,alien_bullets):
     """Respond to keypresses and mouse events."""
@@ -44,7 +73,7 @@ def update_screen(ai_settings,screen,stats,sb,ship,aliens,bullets,alien_bullets,
 
     # Draw the play button if the game is inactive.
     if not stats.game_active:
-        play_button.draw_button()
+        present_game(ai_settings,screen)
 
     # Make the most recently drawn sceeen visible.
     pygame.display.flip()
@@ -95,7 +124,7 @@ def check_ship_bullet_alien_collisions(ai_settings,screen,stats,sb,ship,aliens,b
 
     if collisions:
         for aliens in collisions.values():
-            stats.score += ai_settings.alien_points * len(aliens)
+            stats.score += ai_settings.green_alien_points * len(aliens)
             sb.prep_score()
         check_high_score(stats,sb)
 
@@ -166,13 +195,10 @@ def create_fleet(ai_settings,screen,ship,aliens,level):
     """Create a full fleet of aliens."""
     # Create an alien and find the number of aliens in a row.
     # Spacing between each alien is equal to one alien width.
-    alien = Alien(ai_settings,screen)
+    alien = Alien(ai_settings,screen,0)
     number_aliens_x = get_number_aliens_x(ai_settings, alien.rect.width)
     number_rows = get_number_rows(ai_settings,ship.rect.height,alien.rect.height)
 
-    # if not level % 2 == 0:
-    #     create_triangle_fleet(ai_settings,screen,aliens,number_rows)
-    # else:
     create_rectangle_fleet(ai_settings,screen,aliens,number_rows,number_aliens_x)
 
 
@@ -184,38 +210,16 @@ def create_rectangle_fleet(ai_settings,screen,aliens,number_rows,number_aliens_x
             create_alien(ai_settings,screen,aliens,alien_number,row_number)
 
 
-def create_triangle_fleet(ai_settings,screen,aliens,number_rows):
-    # print('\nFull pyramid...\n')
-    # for i in range(number_rows):
-    #     print(' '*(number_rows-i-1) + '*'*(2*i+1))
-    # number of spaces
-    k = 2*number_rows - 2
-
-    # Create the first row of aliens.
-    for row_number in range(number_rows):
-
-        # inner loop to handle number spaces
-        # values changing acc. to requirement
-        for j in range(0, k):
-            continue
-            # do nothing, suppose to be blank
-        # decrementing k after each loop
-        k = k - 1
-
-        for alien_number in range(0,number_rows-row_number-1):
-            # Create an alien and place it in the row.
-            create_alien(ai_settings,screen,aliens,alien_number,row_number)
-        continue
 
 def create_alien(ai_settings,screen,aliens,alien_number,row_number):
     """Create an alien and place it in the row."""
     alien = None
     if row_number == 0:
-        alien = RedAlien(ai_settings,screen)
+        alien = RedAlien(ai_settings,screen,row_number)
     elif row_number == 1:
-        alien = YellowAlien(ai_settings,screen)
+        alien = YellowAlien(ai_settings,screen,row_number)
     else:
-        alien = Alien(ai_settings,screen)
+        alien = Alien(ai_settings,screen,row_number)
 
     alien_width = alien.rect.width
     alien.x = alien_width + 2 * alien_width * alien_number

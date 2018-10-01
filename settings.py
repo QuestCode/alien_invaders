@@ -1,3 +1,5 @@
+import pygame
+
 class Settings():
     """A class to store all settings for Alien Invasion."""
 
@@ -6,7 +8,9 @@ class Settings():
         # Screen Settings
         self.screen_width = 800
         self.screen_height = 600
-        self.bg_color = (230,230,230)
+        self.bg_color = (0,0,0)
+        self.button_color = (0,0,0)
+        self.text_color = (255,255,255)
 
         # Ship settings
         self.ship_limit = 3
@@ -31,6 +35,15 @@ class Settings():
 
         self.lose_level = False
 
+        self.green_alien_image = 'images/hands_up_invader_green.png'
+        self.yellow_alien_image = 'images/hands_down_invader_yellow.png'
+        self.red_alien_image = 'images/king_invader_red.png'
+
+        try:
+            self.winner_font = pygame.font.Font("fonts/Megadeth.ttf", 70)
+        except:
+            self.winner_font = pygame.font.Font(None, 70)
+
         self.initialize_dynamic_settings()
 
 
@@ -44,7 +57,9 @@ class Settings():
         self.fleet_direction = 1
 
         # Scoring
-        self.alien_points = 50
+        self.green_alien_points = 50
+        self.yellow_alien_points = 100
+        self.red_alien_points = 200
 
     def increase_speed(self):
         """Increase speed settings and alien point values."""

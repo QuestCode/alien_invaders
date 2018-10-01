@@ -4,15 +4,16 @@ from pygame.sprite import Sprite
 class Alien(Sprite):
     """A class to represent a single alien in the fleet."""
 
-    def __init__(self,ai_settings, screen):
+    def __init__(self,ai_settings, screen,row_number):
         """Initialize the alien and set its starting postion."""
         super(Alien,self).__init__()
-        self.health = 1
         self.screen = screen
         self.ai_settings = ai_settings
 
+        self.row_number = row_number
+
         # Load the alien image and set its rect attribute.
-        self.image = pygame.image.load('images/hands_up_invader_green.png')
+        self.image = pygame.image.load(ai_settings.green_alien_image)
         self.rect = self.image.get_rect()
 
         # Start each new alien near the top left of the screen.
@@ -42,16 +43,14 @@ class Alien(Sprite):
 
 class RedAlien(Alien):
 
-    def __init__(self,ai_settings, screen):
+    def __init__(self,ai_settings,screen,row_number):
         """Initialize the alien and set its starting postion."""
-        super().__init__(ai_settings, screen)
-        self.image = pygame.image.load('images/king_invader_red.png')
-        self.health = 3
+        super().__init__(ai_settings,screen,row_number)
+        self.image = pygame.image.load(ai_settings.red_alien_image)
 
 class YellowAlien(Alien):
 
-    def __init__(self,ai_settings, screen):
+    def __init__(self,ai_settings,screen,row_number):
         """Initialize the alien and set its starting postion."""
-        super().__init__(ai_settings, screen)
-        self.image = pygame.image.load('images/hands_down_invader_yellow.png')
-        self.health = 2
+        super().__init__(ai_settings,screen,row_number)
+        self.image = pygame.image.load(ai_settings.yellow_alien_image)
