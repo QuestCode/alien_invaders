@@ -14,7 +14,7 @@ class Settings():
         self.text_color = (255,255,255)
 
         # Ship settings
-        self.ship_limit = 5
+        self.ship_limit = 3
 
         # Bullet settings
         self.bullet_width = 3
@@ -22,7 +22,7 @@ class Settings():
 
         # Ship Bullet Settings
         self.ship_bullet_color = 60,60,60
-        self.ship_bullets_allowed = 3
+        self.ship_bullets_allowed = 5
 
         # Alien settings
         self.fleet_drop_speed = 10

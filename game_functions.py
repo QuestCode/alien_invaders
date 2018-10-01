@@ -127,6 +127,7 @@ def check_ship_bullet_alien_collisions(ai_settings,screen,stats,sb,ship,aliens,b
             stats.score += ai_settings.green_alien_points * len(aliens)
             sb.prep_score()
         check_high_score(stats,sb)
+        ai_settings.lose_level = False
 
     if len(aliens) == 0 and ai_settings.lose_level == False:
         # If the entire fleet is destroyed, start a new level.
