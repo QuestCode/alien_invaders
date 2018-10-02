@@ -40,6 +40,7 @@ class Settings():
         self.green_alien_image = 'images/hands_up_invader_green.png'
         self.yellow_alien_image = 'images/hands_down_invader_yellow.png'
         self.red_alien_image = 'images/king_invader_red.png'
+        self.bunker_image = 'images/png_images/bunker.png'
 
         try:
             self.winner_font = pygame.font.Font("fonts/Megadeth.ttf", 70)

@@ -6,6 +6,7 @@ from bullet import  AlienBullet
 from alien import Alien
 from alien import RedAlien
 from alien import YellowAlien
+from bunker import Bunker
 from time import sleep
 from button import Button
 from alienlabel import AlienLabel
@@ -39,7 +40,7 @@ def display_score_card(ai_settings,screen):
     yellow_alien.update()
     red_alien.update()
 
-def check_events(ai_settings,screen,stats,sb,play_button,ship,red_aliens,yellow_aliens,green_aliens,bullets,alien_bullets):
+def check_events(ai_settings,screen,stats,sb,play_button,ship,red_aliens,yellow_aliens,green_aliens,bunkers,bullets,alien_bullets):
     """Respond to keypresses and mouse events."""
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -53,9 +54,9 @@ def check_events(ai_settings,screen,stats,sb,play_button,ship,red_aliens,yellow_
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
             mouse_x,mouse_y = pygame.mouse.get_pos()
-            check_play_button(ai_settings,screen,stats,sb,play_button,ship,red_aliens,yellow_aliens,green_aliens,bullets,mouse_x,mouse_y)
+            check_play_button(ai_settings,screen,stats,sb,play_button,ship,red_aliens,yellow_aliens,green_aliens,bunkers,bullets,mouse_x,mouse_y)
 
-def update_screen(ai_settings,screen,stats,sb,ship,red_aliens,yellow_aliens,green_aliens,bullets,alien_bullets,play_button):
+def update_screen(ai_settings,screen,stats,sb,ship,red_aliens,yellow_aliens,green_aliens,bunkers,bullets,alien_bullets,play_button):
     """Update images on the screen and flip to the new screen."""
     screen.fill(ai_settings.bg_color)
 
@@ -68,7 +69,7 @@ def update_screen(ai_settings,screen,stats,sb,ship,red_aliens,yellow_aliens,gree
 
     ship.blitme()
 
-
+    bunkers.draw(screen)
     red_aliens.draw(screen)
     yellow_aliens.draw(screen)
     green_aliens.draw(screen)
@@ -83,7 +84,7 @@ def update_screen(ai_settings,screen,stats,sb,ship,red_aliens,yellow_aliens,gree
     # Make the most recently drawn sceeen visible.
     pygame.display.flip()
 
-def check_keydown_events(event, ai_settings,screen, ship, bullets):
+def check_keydown_events(event,ai_settings,screen,ship, bullets):
     """Respond to keypresses."""
     if event.key == pygame.K_RIGHT:
         # Move the ship to the right
@@ -120,6 +121,9 @@ def update_bullets(ai_settings,screen,stats,sb,ship,red_aliens,yellow_aliens,gre
 
     check_ship_bullet_alien_collisions(ai_settings,screen,stats,sb,ship,red_aliens,yellow_aliens,green_aliens,bullets)
     check_alien_bullet_ship_collision(ai_settings,screen,stats,sb,ship,red_aliens,yellow_aliens,green_aliens,bullets,alien_bullets)
+
+def update_bunkers(ai_settings,screen,bunkers):
+    bunkers.update()
 
 def alien_collision(sb,stats,bullets,aliens,alien_points):
     collisions = pygame.sprite.groupcollide(bullets,aliens,True,True)
@@ -217,6 +221,22 @@ def attack_ship(ai_settings,screen,red_aliens,yellow_aliens,green_aliens,alien_b
         # fire alien bullet
         alien_fire_bullet(ai_settings,screen,red_aliens,yellow_aliens,green_aliens,alien_bullets)
 
+def create_bunkers(ai_settings,screen,bunkers):
+    bunker = Bunker(ai_settings,screen)
+    number_bunkers = get_number_bunkers(ai_settings,bunker.rect.width)
+    for bunker_number in range(number_bunkers):
+        new_bunker = Bunker(ai_settings,screen)
+        bunker_width = new_bunker.rect.width
+        new_bunker.x = bunker_width + 2 * bunker_width * bunker_number
+        new_bunker.rect.x = new_bunker.x
+        new_bunker.rect.y = ai_settings.screen_height/2 + 100
+        bunkers.add(new_bunker)
+
+def get_number_bunkers(ai_settings, bunker_width):
+    """Determine the number of aliens that fit in a row."""
+    available_space_x = ai_settings.screen_width - 2 * bunker_width
+    return int(available_space_x / (2 * bunker_width))
+
 def create_fleet(ai_settings,screen,ship,red_aliens,yellow_aliens,green_aliens,level):
     """Create a full fleet of aliens."""
     # Create an alien and find the number of aliens in a row.
@@ -262,14 +282,13 @@ def create_alien(ai_settings,screen,red_aliens,yellow_aliens,green_aliens,alien_
 def get_number_aliens_x(ai_settings, alien_width):
     """Determine the number of aliens that fit in a row."""
     available_space_x = ai_settings.screen_width - 2 * alien_width
-    number_aliens_x = int(available_space_x / (2 * alien_width))
-    return number_aliens_x
+    return int(available_space_x / (2 * alien_width))
 
 def get_number_rows(ai_settings,ship_height,alien_height):
     """Determine the number of rows of aliens that fit on the screen."""
     available_space_y = (ai_settings.screen_height - (3 * alien_height) - ship_height)
-    number_rows = int(available_space_y / (2 * alien_height))
-    return number_rows
+    return int(available_space_y / (2 * alien_height))
+
 
 def update_aliens(ai_settings,screen,stats,sb,ship,red_aliens,yellow_aliens,green_aliens,bullets,alien_bullets):
     """Check if the fleet is at an edge, and then update the postions of all aliens in the fleet."""
@@ -351,7 +370,7 @@ def check_aliens_bottom(ai_settings,screen,stats,sb,ship,red_aliens,yellow_alien
             ship_hit_by_alien_ship(ai_settings,screen,stats,sb,ship,red_aliens,yellow_aliens,green_aliens,bullets,alien_bullets)
             break
 
-def check_play_button(ai_settings,screen,stats,sb,play_button,ship,red_aliens,yellow_aliens,green_aliens,bullets,mouse_x,mouse_y):
+def check_play_button(ai_settings,screen,stats,sb,play_button,ship,red_aliens,yellow_aliens,green_aliens,bunkers,bullets,mouse_x,mouse_y):
     """Start a new game when the player clicks Play."""
     button_clicked = play_button.rect.collidepoint(mouse_x,mouse_y)
     if button_clicked and not stats.game_active:
@@ -374,9 +393,14 @@ def check_play_button(ai_settings,screen,stats,sb,play_button,ship,red_aliens,ye
         yellow_aliens.empty()
         red_aliens.empty()
         bullets.empty()
+        bunkers.empty()
 
         # Create a new fleet and center the ship.
         create_fleet(ai_settings,screen,ship,red_aliens,yellow_aliens,green_aliens,stats.level)
+
+        # Create bunkers
+        create_bunkers(ai_settings,screen,bunkers)
+
         ship.center_ship()
 
 def check_high_score(stats,sb):

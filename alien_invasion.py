@@ -31,6 +31,7 @@ def run_game():
     red_aliens = Group()
     yellow_aliens = Group()
     green_aliens = Group()
+    bunkers = Group()
 
     # Create fleet of aliens.
     gf.create_fleet(ai_settings,screen,ship,red_aliens,yellow_aliens,green_aliens,stats.level)
@@ -38,12 +39,13 @@ def run_game():
     # start loop for game.
     while True:
         # watch for keyboard and mouse events.
-        gf.check_events(ai_settings,screen,stats,sb,play_button,ship,red_aliens,yellow_aliens,green_aliens,bullets,alien_bullets)
+        gf.check_events(ai_settings,screen,stats,sb,play_button,ship,red_aliens,yellow_aliens,green_aliens,bunkers,bullets,alien_bullets)
         if stats.game_active:
             ship.update()
             gf.attack_ship(ai_settings,screen,red_aliens,yellow_aliens,green_aliens,alien_bullets)
             gf.update_bullets(ai_settings,screen,stats,sb,ship,red_aliens,yellow_aliens,green_aliens,bullets,alien_bullets)
             gf.update_aliens(ai_settings,screen,stats,sb,ship,red_aliens,yellow_aliens,green_aliens,bullets,alien_bullets)
-        gf.update_screen(ai_settings,screen,stats,sb,ship,red_aliens,yellow_aliens,green_aliens,bullets,alien_bullets,play_button)
+            gf.update_bunkers(ai_settings,screen,bunkers)
+        gf.update_screen(ai_settings,screen,stats,sb,ship,red_aliens,yellow_aliens,green_aliens,bunkers,bullets,alien_bullets,play_button)
 
 run_game()
