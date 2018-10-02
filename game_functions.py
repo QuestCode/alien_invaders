@@ -103,7 +103,7 @@ def check_keyup_events(event, ship):
     elif event.key == pygame.K_LEFT:
         ship.moving_left = False
 
-def update_bullets(ai_settings,screen,stats,sb,ship,red_aliens,yellow_aliens,green_aliens,bullets,alien_bullets):
+def update_bullets(ai_settings,screen,stats,sb,ship,red_aliens,yellow_aliens,green_aliens,bunkers,bullets,alien_bullets):
     """Update position of the bullets and get rid of old bullets."""
     # Update bullet positions.
     bullets.update()
@@ -119,11 +119,24 @@ def update_bullets(ai_settings,screen,stats,sb,ship,red_aliens,yellow_aliens,gre
         if bullet.rect.top >= screen_rect.height:
             alien_bullets.remove(bullet)
 
+    check_bullet_bunker_collisions(ai_settings,screen,bunkers,bullets,alien_bullets)
     check_ship_bullet_alien_collisions(ai_settings,screen,stats,sb,ship,red_aliens,yellow_aliens,green_aliens,bullets)
     check_alien_bullet_ship_collision(ai_settings,screen,stats,sb,ship,red_aliens,yellow_aliens,green_aliens,bullets,alien_bullets)
 
 def update_bunkers(ai_settings,screen,bunkers):
     bunkers.update()
+
+def check_bullet_bunker_collisions(ai_settings,screen,bunkers,bullets,alien_bullets):
+    bunker_collisions(ai_settings,bunkers,bullets,alien_bullets)
+
+def bunker_collisions(ai_settings,bunkers,bullets,alien_bullets):
+    bullet_coll = pygame.sprite.groupcollide(bullets,bunkers,True,True)
+    alien_bullet_coll = pygame.sprite.groupcollide(alien_bullets,bunkers,True,True)
+
+    if bullet_coll:
+        print('coll')
+        # for bunkers in bullet_coll.values():
+
 
 def alien_collision(sb,stats,bullets,aliens,alien_points):
     collisions = pygame.sprite.groupcollide(bullets,aliens,True,True)

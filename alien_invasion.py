@@ -43,7 +43,7 @@ def run_game():
         if stats.game_active:
             ship.update()
             gf.attack_ship(ai_settings,screen,red_aliens,yellow_aliens,green_aliens,alien_bullets)
-            gf.update_bullets(ai_settings,screen,stats,sb,ship,red_aliens,yellow_aliens,green_aliens,bullets,alien_bullets)
+            gf.update_bullets(ai_settings,screen,stats,sb,ship,red_aliens,yellow_aliens,green_aliens,bunkers,bullets,alien_bullets)
             gf.update_aliens(ai_settings,screen,stats,sb,ship,red_aliens,yellow_aliens,green_aliens,bullets,alien_bullets)
             gf.update_bunkers(ai_settings,screen,bunkers)
         gf.update_screen(ai_settings,screen,stats,sb,ship,red_aliens,yellow_aliens,green_aliens,bunkers,bullets,alien_bullets,play_button)
